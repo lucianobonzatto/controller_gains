@@ -1,0 +1,23 @@
+data = readmatrix('uav_x.csv');
+X_vel_uav = data(:, 2);
+X_cmd_vel = data(:, 6);
+
+data = readmatrix('uav_y.csv');
+Y_vel_uav = data(:, 3);
+Y_cmd_vel = data(:, 7);
+
+data = readmatrix('uav_z.csv');
+Z_vel_uav = data(:, 4);
+Z_cmd_vel = data(:, 8);
+
+data = readmatrix('uav_r.csv');
+R_vel_uav = data(:, 5);
+R_cmd_vel = data(:, 9); 
+
+%systemIdentification
+%ss_model=ss(tf1)
+
+% sys = tf ([2.093565803329966e+02], [1,11.999360118457849,69.384225698174160,1.996322667255999e+02,2.052720289408162e+02]);
+% opts = pidtuneOptions('PhaseMargin',45,'DesignFocus','reference-tracking');
+% controller = pidtune(sys, 'pd', opts);
+% disp(controller)
