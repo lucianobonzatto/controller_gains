@@ -1,0 +1,43 @@
+clear;
+load('DATA.sid', '-mat');
+%tfr = Model{1};  % tfr - Roll
+tfx = Model{2};  % tfx - X
+%tfy = Model{3};  % tfy - Y
+%tfz = Model{4};  % tfz - Z
+
+tf_x_auto_gains = pidtune(tfx, 'PID');
+disp('=== Ganhos Sintonizados Automaticamente (pidtune) ===');
+disp(PID_tune_gains);
+
+
+% Escolha qual PID usar:
+PID_x = PID_auto;  % Use PID_manual para ganhos manuais
+
+sys_x_closed = feedback(PID_x * tfx, 1);
+
+% Obter informações da resposta ao degrau
+info_x = stepinfo(sys_x_closed);
+disp('=== Informações da Resposta ao Degrau (Eixo X) ===');
+disp(info_x);
+
+t = 0:0.01:10;  % Vetor de tempo ajustado
+
+% entrada = 2 * ones(size(t));  % Degrau de amplitude 2
+% entrada = t;  % Sinal rampa
+ entrada = sin(2*pi*0.5*t);  % Senoide de 0.5 Hz
+% entrada = (t>=0)*1 + (t>=3)*1 + (t>=6)*(-2);
+
+% Simular a resposta do sistema
+[y, t_out] = lsim(sys_x_closed, entrada, t);
+
+% Plotar entrada e saída
+figure;
+plot(t, entrada, 'b--', 'LineWidth', 1.5, 'DisplayName', 'Entrada (Referência)');
+hold on;
+plot(t_out, y, 'r', 'LineWidth', 1.5, 'DisplayName', 'Saída do Sistema');
+hold off;
+title('Resposta do Sistema em Malha Fechada - Eixo X');
+xlabel('Tempo (s)');
+ylabel('Amplitude');
+legend('show', 'Location', 'best');
+grid on;
